@@ -4,6 +4,14 @@ Pseudo py-code for [ran.erl]:
 
 ```python
 def run(N):
+    """This is the main entry point to the benchmark.
+    
+    N is the number of cores multiplied by:
+       1 for "short" benchmark
+       2 for "intermediate" benchmark
+       4 for "long" benchmark
+    """
+
     # self() returns a pid of the current process
     Parent = self()
     # Pid List
