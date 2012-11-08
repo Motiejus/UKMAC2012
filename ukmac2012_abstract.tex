@@ -5,6 +5,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2.5cm,rmargin=2.5cm}
+\usepackage{textcomp}
 \usepackage{babel}
 \begin{document}
 
@@ -12,7 +13,7 @@
 and Erlang}
 
 
-\author{Ashkan Tousimojarad, Motiejus Jak\v{s}tys, Wim Vanderbauwhede}
+\author{Ashkan Tousimojarad, Motiejus Jakštys, Wim Vanderbauwhede }
 
 
 \date{School of Computing Science, University of Glasgow}
@@ -27,76 +28,58 @@ complex interaction patterns (such as parallel pipelines and reductions)
 in a very natural and easy way. We compare this approach to Erlang,
 a well-known actor model based language.
 
-As our aim is to demonstrate that our approach scales easily to large numbers
-of cores, our target platform in this work is the Tilera TILE64 64-core
-processor. We also show results on a conventional 2x~Quad-core multicore
-processor Intel(R)~Xeon(R)~CPU~E5620 and high performance 2xIntel~Xeon~E5-2670,
-eight-core processor, which can be rent on Amazon~EC2. We present results on
-standard benchmarks {[}which benchmarks?{]} to illustrate the capability for
-exploiting parallelism of each approach, as well as an implementation of the
-merge sort algorithm.
+As our aim is to demonstrate that our approach scales easily to large
+numbers of cores, our target platform in this work is the Tilera TILEPro64™
+64-core processor. However, We also show results on a conventional
+2x~Quad-core multicore processor Intel(R)~Xeon(R)~CPU~E5620 and
+high performance 2xIntel~Xeon~E5-2670, eight-core processor, which
+can be rent on Amazon~EC2. We present results on synthetic highly parallel benchmarks
+to illustrate the capability for exploiting
+parallelism of each approach, as well as an implementation of the
+Merge Sort algorithm.
 
-The TILE64 processor is similar to a GPU in that it is an accelerator connect
-to the PCIe bus. However, the system runs with a standard ANSI C and C++
-programming environment, and is therefore not limited to data parallel
-operation and does not require a special programming language such as CUDA or
-OpenCL. TILE64 gives options to work like a standard Linux SMP machine (hence
-most programs can run unchanged), or run on bare metal where a programmer sees
-a 64-core network-on-chip without an operating system. Most useful are
-intermediate options, such as Zero Overhead Linux, where operating system is
-running in a way which does not cause any overhead.
+The TILEPro64™ processor is similar to a GPU in that it is an accelerator
+connect to the PCIe bus. However, the system runs Zero-Overhead Linux
+and is therefore not limited to data parallel operation. It also does
+not require a special programming language such as CUDA or OpenCL.
 
-\subsection*{More on Gannet}
-{[}More on Gannet{]} 
+The Gannet language can be conceptually described as an Intermediate
+Representation (IR) for the Gannet Virtual Machine (Gannet VM), similar
+to .NET CIL for .NET CLR virtual machine. A program in the Gannet
+language is a functional task description which defines the data flow
+in the form of function calls. The task description, which contains
+the actual information about the configuration of computation and
+communication, is then compiled to the Gannet bytecode to be executed
+by the Gannet VM.
 
-\subsection*{More on Erlang}
+In the Gannet system, we regard IP cores as ``service providers''
+i.e. every core provides one or more services to the system. In order
+to achieve the functional behavior, every tile of the Gannet VM contains
+a special control unit called Service Manager. The Gannet bytecode
+is a flat list of symbols, each of which has a property called kind.
+The service manager uses rules linked to the symbol kind to process
+the task description; the two main rules are: I) function calls are
+delegated to the corresponding function (service); II) data are requested.
 
-We compare our Gannet approach to Erlang because Erlang was specifially
-designed for distributed systems, so it share the aims of our work,
-but is also a very mature platform.
+The Gannet project aims to facilitate high abstraction-level design
+of complex SoCs. We compare our Gannet approach to Erlang because
+Erlang was specifically designed for distributed systems, so it share
+the aims of our work, but is also a very mature platform.
 
 Erlang is a programming language which has many features more commonly
 associated with an operating system than with a programming language:
 concurrent processes, scheduling, memory management, distribution, networking,
-etc. 
+etc.  Erlang has extremely lightweight processes whose memory requirements can
+vary dynamically. There are usually called \emph{actors}. Processes have no
+shared memory and communicate by asynchronous message passing. Erlang is
+designed to be run in a distributed environment: it is as easy to create a
+process and communicate to it on a host node like on a remote node.
 
-Erlang is characterized by the following features:
-
-\begin{description}
-    \item[Concurrency] -- Erlang has extremely lightweight processes whose
-        memory requirements can vary dynamically. Processes have no shared
-        memory and communicate by asynchronous message passing. Erlang supports
-        applications with very large numbers of concurrent processes. No
-        requirements for concurrency are placed on the host operating system.
-        However, once concurrency is available, it is very well exploited
-        (reference needed).
-    \item[Distribution] -- Erlang is designed to be run in a distributed
-        environment. An Erlang virtual machine is called an Erlang node. A
-        distributed Erlang system is a network of Erlang nodes (typically one
-        per processor). An Erlang node can create parallel processes running on
-        other nodes, which perhaps use other operating systems. Processes
-        residing on different nodes communicate in exactly the same was as
-        processes residing on the same node. 
-    \item[Robustness] -- Erlang has various error detection primitives which can
-        be used to structure fault-tolerant systems.
-    \item[Soft real-time] -- Erlang supports programming "soft" real-time
-        systems, which require response times in the order of milliseconds.
-\end{description}
-
-Also less important for HPC, but very important for enterprise applications:
-\begin{itemize}
-    \item Hot code upgrade
-    \item Incremental code loading
-\end{itemize}
-
-Erlang was developed in Ericsson labs for its highly available phone switching
-software. It is widely used in industry due to its reliability, scalability and
-performance.
-
-\subsection*{Remarks?}
-
-Although this is very much a work in progress, we show that our approach
-combines excellent performance with ease of use.
+We compare our Gannet approach to Erlang because Erlang was specifically
+designed for distributed systems, so it share the aims of our work, but is also
+a very mature platform. Although this is very much a work in progress, we show
+that our approach combines excellent performance with ease of use.
 
 %The abstract is 1 page max, keep that in mind
+
 \end{document}
