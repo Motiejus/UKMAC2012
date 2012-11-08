@@ -6,7 +6,7 @@ Pseudo py-code for [ran.erl]:
 def run(N):
     """This is the main entry point to the benchmark.
     
-    N is the number of cores multiplied by:
+    N is the number of detected cores in the system multiplied by:
        1 for "short" benchmark
        2 for "intermediate" benchmark
        4 for "long" benchmark
@@ -14,27 +14,31 @@ def run(N):
 
     # self() returns a pid of the current process
     Parent = self()
-    # Pid List
+    # Pid list of spawned processes
     PList = []
     for I in range(1, N):
-        # Spawn a new process which executes MyFun
+        # Spawn a new process which executes MyFun. "spawn" returns
+        # pid of the new process.
         Pid = spawn(lambda: MyFun(Parent))
         # Add its pid to the children array
         PList.append(Pid)
+
     # Send a tuple (Parent, "go") to each child
     for Pid in PList:
         send((Parent, "go"))
-    # receive (Pid, anything) from every child
+
+    # receive (Pid, dontcare) from every child. Note: dontcare is a special
+    # value in Erlang which accepts anything.
     for Pid in PList:
         # receive function blocks until message is received
-        receive((Pid, anything))
+        receive((Pid, dontcare))
 
 def MyFun(Parent):
     """This function is called in a new "child" process.
 
     Parent is the PID of the parent process."""
 
-    # Block until Parent sends us a message "go"
+    # Block (wait) until Parent sends us a message "go"
     receive((Parent, "go"))
     # Send parent a tuple (self, ...)
     send(Parent, (self(), random(100)))
@@ -44,7 +48,7 @@ def random(N):
     RandList = mk_ranlist(Len, N*2)
     # Splits RandList to two, assigns FirstHalf and SecondHalf
     # accordingly.
-    (FirstHalf, SecondHalf) = split_list(N div 2, RandList)
+    (FirstHalf, SecondHalf) = split_list(N div 2, sorted(RandList))
     return SecondHalf[0]
 
 def mk_ranlist(Len, Max):
@@ -59,7 +63,8 @@ def mk_ranlist(Len, Max):
 
 ```
 
-Here is how random.seed and how random.uniform work. The original code is in [random.erl].
+Here is how random.seed and how random.uniform work. The original code is in
+[random.erl].
 
 ```python
 
@@ -92,6 +97,11 @@ def uniform(N):
     return trunc(uniform() * N) + 1
 
 ```
+
+### Notes
+
+Erlang does not have arrays, it uses doubly linked list. So `mk_ranlist` should
+return a linked list rather than array (which would be more efficient).
 
 [random.erl]: https://github.com/erlang/otp/blob/master/lib/stdlib/src/random.erl#L92
 [ran.erl]: https://github.com/softlab-ntua/bencherl/blob/master/bench/ran/src/ran.erl#L52
