@@ -1,0 +1,55 @@
+%% LyX 2.0.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2.5cm,rmargin=2.5cm}
+\usepackage{babel}
+\begin{document}
+
+\title{Parallel Programming on the Tilera Manycore Platform: Comparing Gannet
+and Erlang}
+
+
+\author{Ashkan Tousimojarad, Motiejus Jakstys, Wim Vanderbauwhede }
+
+
+\date{School of Computing Science, University of Glasgow}
+
+\maketitle
+In this talk we report preliminary results of our work on novel parallel
+programming approaches for manycore platforms. We introduce our novel
+programming framework, Gannet, based on a functional task composition
+language with parallel evaluation. The purpose of Gannet is to make
+it possible for the programmer to express parallel algorithms with
+complex interaction patterns (such as parallel pipelines and reductions)
+in a very natural and easy way. We compare this approach to Erlang,
+a well-known actor model based language.
+
+As our aim is to demonstrate that our approach scales easily to large
+numbers of cores, our target platform in this work is the Tilera TILE64
+64-core processor. However, we also show results on a conventional
+multicore processor {[}list type here, I suggest you try it on roma{]}.
+We present results on standard benchmarks to illustrate the capability
+for exploiting parallelism of each approach, as well as an implementation
+of the merge sort algorithm.
+
+The TILE64 processor is similar to a GPU in that it is an accelerator
+connect to the PCIe bus. However, the system runs Zero-Overhead Linux
+and is therefore not limited to data parallel operation. It also does
+not require a special programming language such as CUDA or OpenCL. 
+
+{[}More on Gannet{]} 
+
+We compare our Gannet approach to Erlang because Erlang was specifially
+designed for distributed systems, so it share the aims of our work,
+but is also a very mature platform.
+
+{[}A bit more on Erlang{]}
+
+Although this is very much a work in progress, we show that our approach
+combines excellent performance with ease of use.
+
+%The abstract is 1 page max, keep that in mind
+\end{document}
