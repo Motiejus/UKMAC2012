@@ -1,10 +1,11 @@
 %% LyX 2.0.4 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
-\documentclass[english]{article}
+\documentclass[english,11pt]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\renewcommand{\rmdefault}{ptm}
 \usepackage{geometry}
-\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2.5cm,rmargin=2.5cm}
+\geometry{verbose,tmargin=2cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
 \usepackage{textcomp}
 
 \makeatletter
@@ -27,73 +28,82 @@ and Erlang}
 \date{School of Computing Science, University of Glasgow}
 
 \maketitle
+
+\thispagestyle{empty}
+
 In this talk we report preliminary results of our work on novel parallel
 programming approaches for manycore platforms. We introduce our novel
-programming framework, Gannet, based on a functional task composition
+programming framework, {\em Gannet}, based on a functional task composition
 language with parallel evaluation. The purpose of Gannet is to make
 it possible for the programmer to express parallel algorithms with
 complex interaction patterns (such as parallel pipelines and reductions)
-in a very natural and easy way. We compare this approach to Erlang,
+in a very natural and easy way. We compare this approach to {\em Erlang},
 a well-known actor model based language.
+
+{\bf The Tilera Platform} 
 
 As our aim is to demonstrate that our approach scales easily to large
 numbers of cores, our target platform in this work is the Tilera TILEPro64™
-64-core processor. However, We also show results on a conventional
-2x~Quad-core multicore processor Intel(R)~Xeon(R)~CPU~E5620 and
-high performance 2xIntel~Xeon~E5-2670, eight-core processor, which
-can be rent on Amazon~EC2. We present results on synthetic highly
-parallel benchmarks to illustrate the capability for exploiting parallelism
-of each approach, as well as an implementation of the Merge Sort algorithm.
+64-core processor. We also show results on a conventional
+Intel multicore processor  as a reference.
+%2x~Quad-core multicore processor Intel(R)~Xeon(R)~CPU~E5620 and
+%high performance 2xIntel~Xeon~E5-2670, eight-core processor, which
+%can be rent on Amazon~EC2. 
 
 The TILEPro64™ processor is similar to a GPU in that it is an accelerator
 connect to the PCIe bus. However, the system runs Zero-Overhead Linux
-and is therefore not limited to data parallel operation. It also does
-not require a special programming language such as CUDA or OpenCL.
+and is not limited to data parallel operation. It also does
+not require a special programming framework such as CUDA or OpenCL.
 
-\textbf{\emph{Gannet}} language can be conceptually described as an
-Intermediate Representation (IR) for the Gannet Virtual Machine (Gannet
-VM), similar to .NET CIL for .NET CLR virtual machine. A program in
-the Gannet language is a functional task description which defines
-the data flow in the form of function calls. The task description,
-which contains the actual information about the configuration of computation
-and communication, is then compiled to the Gannet bytecode to be executed
-by the Gannet VM.
+%\textbf{\emph{Gannet}} language can be conceptually described as an
+%Intermediate Representation (IR) for the Gannet Virtual Machine (Gannet
+%VM), similar to .NET CIL for .NET CLR virtual machine.
 
-In the Gannet system, we regard IP cores as ``service providers''
-i.e. every core provides one or more services to the system. In order
-to achieve the functional behavior, every tile of the Gannet VM contains
-a special control unit called Service Manager. The Gannet bytecode
-is a flat list of symbols, each of which has a property called kind.
-The service manager uses rules linked to the symbol kind to process
-the task description; the two main rules are: 
+{\bf The Gannet Framework}
 
-\textbf{I)} function calls are delegated to the corresponding function
-(service)
+To program Gannet we use Gannet-C, a parallel task composition language which uses a restricted subset of C++ to express the communication and unrestricted C++ for the computational tasks. The communication code in Gannet-C is compiled to pure functional byte code which is executed  in parallel on the Gannet Virtual Machine (GannetVM). 
+% A program in the Gannet language is a functional task description which defines the data flow in the form of function calls. The task description, which contains the actual information about the configuration of computation and communication, is then compiled to the Gannet bytecode to be executed by the Gannet VM.
 
-\textbf{II)} data are requested
+In the Gannet system, we use an abstraction of ``service providers''
+i.e. every core runs one or more tasks (implemented essentially as C++ objects),  which each provide one or more "services"  to the system (via the method calls). 
+%In order to achieve the functional behaviour, every tile of the Gannet VM contains a special control unit called Service Manager. The Gannet bytecode is a flat list of symbols, each of which has a property called kind.
+%The service manager uses rules linked to the symbol kind to process the task description; the two main rules are: 
 
-Gannet project aims to facilitate high abstraction-level design of
-complex SoCs. We compare our Gannet approach to Erlang because Erlang
+%\textbf{I)} function calls are delegated to the corresponding function (service)
+
+%\textbf{II)} data are requested
+
+{\bf Erlang}
+
+We compare our Gannet approach to Erlang because Erlang
 was specifically designed for distributed systems, so it share the
 aims of our work, but is also a very mature platform.
 
-\textbf{\emph{Erlang}} is a programming language which has many features
-more commonly associated with an operating system than with a programming
-language: concurrent processes, scheduling, memory management, distribution,
-networking, etc. 
+%\textbf{\emph{Erlang}} is a programming language which has many features
+%more commonly associated with an operating system than with a programming
+%language: concurrent processes, scheduling, memory management, distribution,
+%networking, etc. 
+Erlang is a language based on the  {\em actor model},  characterized by the following features:
 
-\textbf{Concurrency:} Erlang has extremely lightweight processes whose
-memory requirements can vary dynamically. They are usually called
-\emph{actors}. Processes have no shared memory and communicate by
+{\em Concurrency:} Erlang has extremely lightweight processes whose
+memory requirements can vary dynamically. %They are usually called \emph{actors}. 
+Processes have no shared memory and communicate by
 asynchronous message passing. 
 
-\textbf{Distribution:} Erlang is designed to be run in a distributed
+{\em Distribution:} Erlang is designed to be run in a distributed
 environment: it is as easy to create a process and communicate to
 it on a host node like on a remote node.
 
-Although this is very much a work in progress, we show that our approach
-combines excellent performance with ease of use.
+{\bf Preliminary Results}
 
-%Don't you think we need spaces between paragraphs?
+We present results on synthetic highly
+parallel benchmarks to illustrate the capability for exploiting parallelism
+of each approach, as well as an implementation of the Merge Sort algorithm.
 
+Although this is very much a work in progress,  our approach
+combines excellent performance with ease of use. We show that the overhead introduced by the GannetVM is negligible compared to a thread-based reference implementation, and that our approach can exploit the available parallelism to the  full. Our Merge Sort implementation outperforms a reported  MPI  implementation.
+
+
+%Don't you think we need spaces between paragraphs? WV: No. This is an abstract, not a paper
+%%%%
 \end{document}
